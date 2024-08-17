@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { UserService } from '../service';
 import { UserDTO, UserUpdateDTO } from '../dto';
 import { v4 as uuidv4 } from 'uuid';
 import { User as UserEntity } from 'src/db';
 import * as bcrypt from 'bcrypt';
+import { AuthGuard, Role, Roles, RolesGuard } from '../../../auth/guard';
 
 type UpdateResult = {
     generatedMaps: [];
@@ -12,15 +13,19 @@ type UpdateResult = {
 }
 
 @Controller('user')
+@UseGuards(AuthGuard)
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Get('all')
+    @Roles(Role.Admin)
     getAll() {
         return this.userService.getAll();
     }
 
     @Post('create')
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
     async create(@Body() user: UserDTO) {
         const exist = await this.userService.findByEmail(user.email);
         if (exist) {
@@ -35,6 +40,8 @@ export class UserController {
             firstName: user.firstName,
             lastName: user.lastName,
             password,
+            happinessScore: 100,
+            salary: 1000000,
             confirmed: false,
             forgotPasswordLocked: false,
             createdAt: new Date().toUTCString(),
@@ -67,7 +74,7 @@ export class UserController {
             return { success: false, message: { user_exist: false } };
         }
         user.updatedAt = new Date().toUTCString();
-        return this.userService.update(id, user).then((res: UpdateResult) => {
+        return this.userService.update(id, { ...exist, ...user }).then((res: UpdateResult) => {
             if (res.affected === 1) {
                 return { success: true };
             }
@@ -76,6 +83,7 @@ export class UserController {
     }
 
     @Delete(':id')
+    @Roles(Role.Admin)
     deleteOne(@Param('id') id: string){
         return this.userService.deleteOne(id).then(res => {
             if (res) {

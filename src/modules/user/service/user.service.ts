@@ -11,7 +11,9 @@ export class UserService {
     ) {}
 
     getAll() {
-        return this.userRepo.find();
+        return this.userRepo.find({
+            select: ['id', 'firstName', 'lastName', 'email', 'createdAt', 'updatedAt', 'isActive']
+        });
     }
 
     create(user: UserEntity) {

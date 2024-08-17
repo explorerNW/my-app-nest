@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { UserService } from '../../modules/user';
 import { UserDTO } from '../../modules/user';
 import * as bcrypt from 'bcrypt';
@@ -11,6 +11,7 @@ export class AuthController {
         private readonly jwtService: JwtService
     ) {}
 
+    @HttpCode(HttpStatus.OK)
     @Post('login')
     async login(@Body('email') email: string, @Body('user') user: UserDTO) {
         const exist = await this.userService.findByEmail(email);
