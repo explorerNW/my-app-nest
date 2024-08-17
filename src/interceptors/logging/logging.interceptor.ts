@@ -7,7 +7,6 @@ export class LoggingInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((res)=>{
-        console.log('1');
         return res;
       })
     );

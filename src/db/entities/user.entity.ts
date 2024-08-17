@@ -1,9 +1,15 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, EntitySchema, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
 
   @Column()
   email: string;
@@ -18,11 +24,48 @@ export class User {
   forgotPasswordLocked: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: string;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @UpdateDateColumn({ nullable: true })
+  updatedAt: string;
 
-  @Column()
+  @Column({ default: true })
   isActive: boolean;
 }
+
+export const UserSchema = new EntitySchema({
+  name: 'User',
+  target: User,
+  columns: {
+    id: {
+      type: String,
+      primary: true,
+      generated: true,
+    },
+    email: {
+      type: String,
+    },
+    password: {
+      type: String,
+    },
+    confirmed: {
+      type: Boolean,
+      default: false,
+    },
+    forgotPasswordLocked: {
+      type: Boolean,
+      default: false,
+    },
+    createdAt: {
+      type: String,
+    },
+    updatedAt: {
+      type: String,
+    },
+    isActive: {
+      type: Boolean,
+      default: true
+    }
+  },
+  relations: {},
+});
