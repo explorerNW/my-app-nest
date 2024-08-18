@@ -12,13 +12,13 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException({ success: false, statusCode: 401, message: { authorization: 'Unauthorized' } });
+      throw new UnauthorizedException({ success: false, statusCode: 401, message: { authorization: false } });
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, { secret: jwtConstants.secret })
       request['user'] = payload;
     } catch(e) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({ success: false, statusCode: 401, message: { authorization: false, logout: true, expired: true } });
     }
     return true;
   }
