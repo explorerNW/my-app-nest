@@ -20,8 +20,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
   app.use(helmet());
   app.enableCors();
-  app.use(cookieParser());
-  app.use(csurf({ cookie: true }));
+  // app.use(cookieParser());
+  // app.use(csurf({ cookie: true }));
   await app.register(fastifyCsrf);
   await app.listen(process.env.SERVER_PORT, ()=>{
     console.log(`server start on: ${process.env.SERVER_PORT}`);
