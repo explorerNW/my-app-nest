@@ -5,6 +5,7 @@ import { init as postgresDBInit, User as UserEntity } from './db';
 import { UserModule, CatModule } from './modules';
 import { AuthModule } from './auth';
 import { mongo } from './db';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -13,6 +14,23 @@ import { mongo } from './db';
     UserModule,
     AuthModule,
     CatModule,
+    ThrottlerModule.forRoot([
+      {
+        name: 'short',
+        ttl: 1000,
+        limit: 3,
+      },
+      {
+        name: 'medium',
+        ttl: 10000,
+        limit: 20
+      },
+      {
+        name: 'long',
+        ttl: 60000,
+        limit: 100
+      }
+    ])
   ],
   controllers: [AppController],
   providers: [AppService],
