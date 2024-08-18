@@ -26,6 +26,12 @@ export class User {
   @CreateDateColumn()
   createdAt: string;
 
+  @Column({ default: 0 })
+  happinessScore: number;
+
+  @Column({ default: 0 })
+  salary: number;
+
   @UpdateDateColumn({ nullable: true })
   updatedAt: string;
 
@@ -58,6 +64,12 @@ export const UserSchema = new EntitySchema({
     },
     createdAt: {
       type: String,
+    },
+    happinessScore: {
+      type: Number
+    },
+    salary: {
+      type: Number,
     },
     updatedAt: {
       type: String,
