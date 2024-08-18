@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { UserService } from '../../modules/user';
-import { UserDTO } from '../../modules/user';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UserLoginDTO } from '../dto.validator';
 
 @Controller('auth')
 export class AuthController {
@@ -13,8 +13,8 @@ export class AuthController {
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    async login(@Body('email') email: string, @Body('user') user: UserDTO) {
-        const exist = await this.userService.findByEmail(email);
+    async login(@Body('user') user: UserLoginDTO) {
+        const exist = await this.userService.findByEmail(user.email);
         if(exist) {
             const match = await bcrypt.compare(user.password, exist.password);
             if (match) {

@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { IsNotEmpty } from "class-validator";
 import mongoose, { HydratedDocument } from "mongoose";
 
 export type CatDocument = HydratedDocument<Cat>;
@@ -6,6 +7,7 @@ export type CatDocument = HydratedDocument<Cat>;
 @Schema()
 export class Cat {
     @Prop()
+    @IsNotEmpty()
     name: String;
 
     @Prop()
