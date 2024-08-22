@@ -6,6 +6,8 @@ import { UserModule, CatModule } from './modules';
 import { AuthModule } from './auth';
 import { mongo } from './db';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { EventsGateway } from './gateway/events/events.gateway';
+import { GatewayModule } from './gateway';
 
 @Module({
   imports: [
@@ -30,9 +32,10 @@ import { ThrottlerModule } from '@nestjs/throttler';
         ttl: 60000,
         limit: 100
       }
-    ])
+    ]),
+    GatewayModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EventsGateway],
 })
 export class AppModule {}

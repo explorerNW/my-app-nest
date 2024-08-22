@@ -6,6 +6,8 @@ import { UserController } from './controller';
 import { AuthModule } from '../../auth';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Cat, CatSchema } from '../../db';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
     imports: [
@@ -13,7 +15,14 @@ import { Cat, CatSchema } from '../../db';
         forwardRef(() => AuthModule),
         MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }])
     ],
-    providers: [UserService],
+    providers: [
+        UserService,
+        {
+            provide: APP_GUARD,
+            useClass: ThrottlerGuard
+        }
+          
+    ],
     controllers: [UserController],
     exports: [UserService]
 })

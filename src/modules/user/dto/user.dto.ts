@@ -1,20 +1,52 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UserDTO {
   @IsNotEmpty()
   firstName: string;
+
   @IsNotEmpty()
   lastName: string;
 
   @IsEmail()
   email: string;
+
   @IsNotEmpty()
   password: string;
 }
 
-export class UserUpdateDTO extends UserDTO {
-  confirmed: boolean;
-  forgotPasswordLocked: boolean;
-  updatedAt: string;
-  isActive: boolean;
+export class UserUpdateDTO {
+  @IsOptional()
+  @IsString()
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  lastName?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  password?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  confirmed?: boolean;
+  @IsOptional()
+  @IsBoolean()
+  forgotPasswordLocked?: boolean;
+
+  updatedAt?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }
