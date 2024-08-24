@@ -8,9 +8,11 @@ import { mongo } from './db';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { EventsGateway } from './gateway/events/events.gateway';
 import { GatewayModule } from './gateway';
+import { ConfigModule } from './modules/config/config.module';
 
 @Module({
   imports: [
+    ConfigModule.register({ folder: './config' }),
     postgresDBInit([UserEntity]),
     mongo.init(),
     UserModule,
@@ -33,7 +35,8 @@ import { GatewayModule } from './gateway';
         limit: 100
       }
     ]),
-    GatewayModule
+    GatewayModule,
+    ConfigModule
   ],
   controllers: [AppController],
   providers: [AppService, EventsGateway],
