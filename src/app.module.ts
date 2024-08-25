@@ -15,6 +15,7 @@ import type { RedisOptions } from 'ioredis';
 import * as redisStore  from 'cache-manager-redis-store';
 import { TaskService } from './task.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { QueuesModule } from './modules/queues/queues.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       }
     ]),
     GatewayModule,
+    QueuesModule,
   ],
   controllers: [AppController],
   providers: [

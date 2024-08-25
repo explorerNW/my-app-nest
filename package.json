@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@fastify/csrf-protection": "^6.4.1",
+    "@nestjs/bull": "^10.2.1",
     "@nestjs/bullmq": "^10.2.1",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.0.0",
@@ -40,6 +41,7 @@
     "@types/cache-manager-redis-store": "^2.0.4",
     "@types/uuid": "^10.0.0",
     "bcrypt": "^5.1.1",
+    "bull": "^4.16.0",
     "bullmq": "^5.12.10",
     "cache-manager": "^5.7.6",
     "cache-manager-redis-store": "^3.0.1",
