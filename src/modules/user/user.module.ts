@@ -8,7 +8,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Cat, CatSchema } from '../../db';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { QueuesModule, QueuesService } from '../queues';
+import { QueuesModule } from '../queues';
+import { LoggerModule } from '../logger';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { QueuesModule, QueuesService } from '../queues';
         forwardRef(() => AuthModule),
         MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }]),
         QueuesModule,
+        LoggerModule,
     ],
     providers: [
         UserService,
