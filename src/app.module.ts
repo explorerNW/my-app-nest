@@ -15,6 +15,7 @@ import type { RedisOptions } from 'ioredis';
 import * as redisStore  from 'cache-manager-redis-store';
 import { TaskService } from './task.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -23,6 +24,12 @@ import { ScheduleModule } from '@nestjs/schedule';
       store: redisStore as any,
     }),
     ScheduleModule.forRoot(),
+    BullModule.forRoot({
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      }
+    }),
     postgresDBInit([UserEntity]),
     mongo.init(),
     UserModule,
