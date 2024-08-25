@@ -22,6 +22,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@fastify/compress": "^7.0.3",
+    "@fastify/cookie": "^9.4.0",
     "@fastify/csrf-protection": "^6.4.1",
     "@nestjs/bull": "^10.2.1",
     "@nestjs/bullmq": "^10.2.1",
@@ -39,6 +41,7 @@
     "@nestjs/websockets": "^10.4.1",
     "@types/bcrypt": "^5.0.2",
     "@types/cache-manager-redis-store": "^2.0.4",
+    "@types/cookie-parser": "^1.4.7",
     "@types/uuid": "^10.0.0",
     "bcrypt": "^5.1.1",
     "bull": "^4.16.0",
@@ -58,7 +61,8 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
