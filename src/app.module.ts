@@ -36,7 +36,6 @@ import { ConfigModule } from './modules/config/config.module';
       }
     ]),
     GatewayModule,
-    ConfigModule
   ],
   controllers: [AppController],
   providers: [AppService, EventsGateway],
