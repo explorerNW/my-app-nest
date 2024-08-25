@@ -3,14 +3,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User as UserEntity } from 'src/db';
 import { Repository } from 'typeorm';
 import { QueuesService } from '../../queues';
+import { LoggerService } from 'src/modules/logger';
 
 @Injectable()
 export class UserService {
+
+    logger: LoggerService;
+
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepo: Repository<UserEntity>,
-        private readonly queue: QueuesService
-    ) {}
+        private readonly queue: QueuesService,
+        readonly myLogger: LoggerService,
+    ) {
+        this.logger = myLogger;
+    }
 
     getAll() {
         return this.userRepo.find({

@@ -15,7 +15,9 @@ type UpdateResult = {
 @Controller('user')
 @UseGuards(AuthGuard)
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(
+        private readonly userService: UserService,
+    ) { }
 
     @Get('all')
     @Roles(Role.Admin)
@@ -98,6 +100,7 @@ export class UserController {
 
     @Get('process')
     handler(@Query('name') name: string, @Query('data') data: Object){
+        this.userService.logger.error(`name: ${name}, data: ${data}`);
         this.userService.queueHandler(name, data);
     }
 }

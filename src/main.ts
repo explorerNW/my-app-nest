@@ -8,13 +8,14 @@ import * as csurf from 'csurf';
 import * as cookieParser from 'cookie-parser';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import fastifyCsrf from '@fastify/csrf-protection';
+import { LoggerService } from './modules/logger/logger.service';
 dotenv.config();
 
 async function bootstrap() {
   // const app = await NestFactory.create(AppModule);
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter()
+    new FastifyAdapter(),
   );
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
@@ -23,6 +24,7 @@ async function bootstrap() {
   app.enableCors();
   // app.use(cookieParser());
   // app.use(csurf({ cookie: true }));
+  app.useLogger(app.get(LoggerService));//  ['error', 'warn']
   await app.register(fastifyCsrf);
   await app.listen(process.env.SERVER_PORT, ()=>{
     console.log(`server start on: ${process.env.SERVER_PORT}`);
