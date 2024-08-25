@@ -95,4 +95,9 @@ export class UserController {
             return { success: false, message: e };
         });
     }
+
+    @Get('process')
+    handler(@Query('name') name: string, @Query('data') data: Object){
+        this.userService.queueHandler(name, data);
+    }
 }

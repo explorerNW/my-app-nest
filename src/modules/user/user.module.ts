@@ -8,12 +8,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Cat, CatSchema } from '../../db';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { QueuesModule, QueuesService } from '../queues';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([UserEntity, UserSchema]),
         forwardRef(() => AuthModule),
-        MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }])
+        MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }]),
+        QueuesModule,
     ],
     providers: [
         UserService,
@@ -21,7 +23,6 @@ import { ThrottlerGuard } from '@nestjs/throttler';
             provide: APP_GUARD,
             useClass: ThrottlerGuard
         }
-          
     ],
     controllers: [UserController],
     exports: [UserService]

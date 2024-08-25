@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User as UserEntity } from 'src/db';
 import { Repository } from 'typeorm';
+import { QueuesService } from '../../queues';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(UserEntity)
-        private readonly userRepo: Repository<UserEntity>
+        private readonly userRepo: Repository<UserEntity>,
+        private readonly queue: QueuesService
     ) {}
 
     getAll() {
@@ -41,5 +43,9 @@ export class UserService {
 
     update(id: string, user: Omit<UserEntity, 'id' | 'createdAt'> ) {
         return this.userRepo.update(id, { ...user }).then(res => res).catch(e => e);
+    }
+
+    queueHandler(name: string, data: Object) {
+        this.queue.add(name, data);
     }
 }
