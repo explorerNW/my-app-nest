@@ -9,10 +9,20 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { EventsGateway } from './gateway/events/events.gateway';
 import { GatewayModule } from './gateway';
 import { ConfigModule } from './modules/config/config.module';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import type { RedisOptions } from 'ioredis';
+import * as redisStore  from 'cache-manager-redis-store';
+import { TaskService } from './task.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.register({ folder: './config' }),
+    CacheModule.register<RedisOptions>({
+      store: redisStore as any,
+    }),
+    ScheduleModule.forRoot(),
     postgresDBInit([UserEntity]),
     mongo.init(),
     UserModule,
@@ -38,6 +48,13 @@ import { ConfigModule } from './modules/config/config.module';
     GatewayModule,
   ],
   controllers: [AppController],
-  providers: [AppService, EventsGateway],
+  providers: [
+    AppService, EventsGateway,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor
+    },
+    TaskService
+  ],
 })
 export class AppModule {}
