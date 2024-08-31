@@ -7,9 +7,9 @@ export class TaskService {
     constructor(private schedulerRegistry: SchedulerRegistry) { }
     private readonly logger = new Logger(TaskService.name);
 
-    @Cron(CronExpression.EVERY_10_SECONDS)
+    @Cron(CronExpression.EVERY_12_HOURS)
     handlerCron() {
-        this.logger.debug('Called every 10 seconds');
+        this.logger.debug('Called every 12 hours');
     }
 
     addCronJob(name: string, seconds: number) {
