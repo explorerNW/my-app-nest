@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { init as postgresDBInit, User as UserEntity } from './db';
-import { ConfigModule, UserModule, CatModule } from './modules';
+import { init as postgresDBInit, mongo, User as UserEntity } from './db';
+import { ConfigModule, UserModule, CatModule, FileUploadModule } from './modules';
 import { AuthModule } from './auth';
-import { mongo } from './db';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { EventsGateway } from './gateway/events/events.gateway';
 import { GatewayModule } from './gateway';
@@ -45,6 +44,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       }
     ]),
     GatewayModule,
+    FileUploadModule,
   ],
   controllers: [AppController],
   providers: [
