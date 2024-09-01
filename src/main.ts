@@ -10,6 +10,7 @@ import fastifyCsrf from '@fastify/csrf-protection';
 import { LoggerService } from './modules/logger/logger.service';
 import fastifyCookie from '@fastify/cookie';
 import compression from '@fastify/compress';
+import * as fastifyMultipart from '@fastify/multipart';
 import { constants } from 'zlib';
 dotenv.config();
 
@@ -30,6 +31,7 @@ async function bootstrap() {
   });
   await app.register(fastifyCsrf);
   await app.register(compression, { encodings: ['gzip', 'deflate'], brotliOptions: { params: { [constants.BROTLI_PARAM_QUALITY]: 4 } } });
+  await app.register(fastifyMultipart);
   await app.listen(process.env.SERVER_PORT, ()=>{
     console.log(`server start on: ${process.env.SERVER_PORT}`);
   });
