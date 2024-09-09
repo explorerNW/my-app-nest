@@ -11,7 +11,6 @@ import { join } from 'path';
         port: 6379,
       },
     }),
-
     // BullModule.forRootAsync({
     //   imports: [ConfigModule],
     //   useFactory: async (configService: ConfigService) => ({
