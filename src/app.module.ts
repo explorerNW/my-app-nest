@@ -13,6 +13,7 @@ import type { RedisOptions } from 'ioredis';
 import * as redisStore  from 'cache-manager-redis-store';
 import { TaskService } from './task.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -45,6 +46,20 @@ import { ScheduleModule } from '@nestjs/schedule';
     ]),
     GatewayModule,
     FileUploadModule,
+    ClientsModule.register([
+      {
+        name: 'MATCH_SERVICE',
+        transport: Transport.TCP
+      },
+      {
+        name: 'REDIS',
+        transport: Transport.REDIS,
+        options: {
+          host: 'localhost',
+          port: Number(process.env.SERVER_PORT)
+        }
+      }
+    ]),
   ],
   controllers: [AppController],
   providers: [
