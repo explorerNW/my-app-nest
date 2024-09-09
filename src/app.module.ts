@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { init as postgresDBInit, mongo, User as UserEntity } from './db';
-import { ConfigModule, UserModule, CatModule, FileUploadModule } from './modules';
+import { ConfigModule, UserModule, CatModule, FileUploadModule, MicroServiceModule } from './modules';
 import { AuthModule } from './auth';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { EventsGateway } from './gateway/events/events.gateway';
@@ -13,7 +13,6 @@ import type { RedisOptions } from 'ioredis';
 import * as redisStore  from 'cache-manager-redis-store';
 import { TaskService } from './task.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -46,20 +45,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ]),
     GatewayModule,
     FileUploadModule,
-    ClientsModule.register([
-      {
-        name: 'MATCH_SERVICE',
-        transport: Transport.TCP
-      },
-      {
-        name: 'REDIS',
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: Number(process.env.SERVER_PORT)
-        }
-      }
-    ]),
+    MicroServiceModule,
   ],
   controllers: [AppController],
   providers: [
