@@ -11,6 +11,7 @@ import { LoggerService } from './modules/logger/logger.service';
 import fastifyCookie from '@fastify/cookie';
 import compression from '@fastify/compress';
 import * as fastifyMultipart from '@fastify/multipart';
+import { SwaggerModule, DocumentBuilder  } from '@nestjs/swagger';
 import { constants } from 'zlib';
 dotenv.config();
 
@@ -22,10 +23,13 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableVersioning({ type:VersioningType.MEDIA_TYPE, key: 'v=' });
-  app.use(helmet());
+  app.use(helmet({ xssFilter: true }));
   app.enableCors();
   app.use(cookieParser());
   app.useLogger(app.get(LoggerService));//  ['error', 'warn']
+  const apiConfig = new DocumentBuilder().setTitle('API').setDescription('project discription').setVersion(process.env.npm_package_version).addServer(`http://localhost:${process.env.SERVER_PORT}/`).build();
+  const document = SwaggerModule.createDocument(app, apiConfig);
+  SwaggerModule.setup('swagger', app, document);
   await app.register(fastifyCookie, {
     secret: 'my-secret'
   });

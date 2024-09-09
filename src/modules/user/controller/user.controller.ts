@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { User as UserEntity } from 'src/db';
 import * as bcrypt from 'bcrypt';
 import { AuthGuard, Role, Roles, RolesGuard } from '../../../auth/guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 type UpdateResult = {
     generatedMaps: [];
@@ -26,6 +27,7 @@ export class UserController {
     }
 
     @Post('create')
+    @ApiBearerAuth()
     @Roles(Role.Admin)
     @UseGuards(RolesGuard)
     async create(@Body() user: UserDTO) {

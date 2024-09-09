@@ -6,6 +6,7 @@ import { diskStorage } from 'multer';
 import { resolve } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
 import { File, FileSchema } from './file-db.schema';
+import { FileController } from './controller';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import { File, FileSchema } from './file-db.schema';
     }),
   ],
   providers: [FileUploadService],
-  controllers: [FileUploadController]
+  controllers: [FileUploadController, FileController]
 })
 export class FileUploadModule {}
