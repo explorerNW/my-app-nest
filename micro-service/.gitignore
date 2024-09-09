@@ -1,9 +1,7 @@
 # compiled output
 /dist
 /node_modules
-/micro-service/node_modules
 /build
-/micro-service/build
 
 # Logs
 logs
