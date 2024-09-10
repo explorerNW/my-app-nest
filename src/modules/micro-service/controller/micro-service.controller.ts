@@ -1,11 +1,12 @@
 import { Body, Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
-import { ClientProxy, ClientRedis } from '@nestjs/microservices';
+import { ClientMqtt, ClientProxy, ClientRedis } from '@nestjs/microservices';
 
 @Controller('micro-service')
 export class MicroServiceController {
     constructor(
         @Inject('MICRO_BASIC_SERVICE') private client: ClientProxy,
-        @Inject('REDIS_SERVICE') private redis: ClientRedis
+        @Inject('REDIS_SERVICE') private redis: ClientRedis,
+        @Inject('MQTT_SERVICE') private mqtt: ClientMqtt,
     ) {}
 
     @Post('accumulator')
@@ -31,5 +32,10 @@ export class MicroServiceController {
     @Get('redis/list')
     getList(@Query('key') key: string) {
         return this.redis.send('redis-key-lrange', key);
+    }
+
+    @Post('message')
+    sendMessage(@Body('message') message: string) {
+        return this.mqtt.send('mqtt-message', message);
     }
 }

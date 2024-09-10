@@ -3,17 +3,16 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, 
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule,
     {
-      transport: Transport.REDIS,
+      transport: Transport.MQTT,
       options: {
-        host: 'localhost',
-        port: 6379,
+        url: 'mqtt://localhost:1883',
       }
     }
   );
   await app.listen().then(()=>{
-    console.log(`Micro-server: Redis start on: ${6379}`);
+    console.log(`Micro-server: MQTT start on: ${ 1883 }`);
   });
 }
 bootstrap();
