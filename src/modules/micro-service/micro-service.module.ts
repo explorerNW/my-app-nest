@@ -1,12 +1,18 @@
 import { Module } from '@nestjs/common';
 import { MicroServiceController } from './controller';
-import { ClientProxyFactory, ClientsModule, Transport } from '@nestjs/microservices';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
-    ConfigModule,
     ClientsModule.register([
+      {
+        name: "MICRO_BASIC_SERVICE",
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 9001,
+        }
+      },
       {
         name: "REDIS_SERVICE",
         transport: Transport.REDIS,
@@ -14,24 +20,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           host: 'localhost',
           port: 6379,
         }
+      },
+      {
+        name: "MQTT_SERVICE",
+        transport: Transport.MQTT,
+        options: {
+          url: 'mqtt://localhost:1883',
+        }
       }
     ])
   ],
   controllers: [MicroServiceController],
-  providers: [
-    {
-      provide: 'MICRO_BASIC_SERVICE',
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return ClientProxyFactory.create({
-          transport: Transport.TCP,
-          options: {
-            host: 'localhost',
-            port: 9001
-          }
-        })
-      }
-    }
-  ]
+  providers: []
 })
 export class MicroServiceModule {}
