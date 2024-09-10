@@ -27,6 +27,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         options: {
           url: 'mqtt://localhost:1883',
         }
+      },
+      {
+        name: "NATS_SERVICE",
+        transport: Transport.NATS,
+        options: {
+          servers: ['nats://localhost:4222'],
+        }
       }
     ])
   ],
