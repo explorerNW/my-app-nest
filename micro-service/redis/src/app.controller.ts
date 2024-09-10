@@ -7,9 +7,23 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @MessagePattern('notifications')
-  getNotifications(@Payload() data: number[], @Ctx() ctx: RedisContext) {
-    console.log(`contenxt-channel: ${ctx.getChannel()}`);
-    return data;
+  getNotifications(@Payload() key: string, @Ctx() ctx: RedisContext) {
+    return this.appService.get(key);
+  }
+
+  @MessagePattern('keys')
+  getKeys() {
+    return this.appService.keys();
+  }
+
+  @MessagePattern('redis-key-type')
+  keyType(@Payload() key: string) {
+    return this.appService.keyType(key);
+  }
+
+  @MessagePattern('redis-key-lrange')
+  lrange(@Payload() key: string) {
+    return this.appService.getList(key);
   }
 
 }
