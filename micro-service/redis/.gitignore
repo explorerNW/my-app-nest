@@ -1,11 +1,7 @@
 # compiled output
 /dist
 /node_modules
-/micro-service/basic/node_modules
-/micro-service/redis/node_modules
 /build
-/micro-service/basic/build
-/micro-service/redis/build
 
 # Logs
 logs

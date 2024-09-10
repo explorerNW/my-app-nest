@@ -8,23 +8,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule,
     ClientsModule.register([
       {
-        name: 'MATCH_SERVICE',
-        transport: Transport.TCP
-      },
-      {
-        name: 'REDIS',
+        name: "REDIS_SERVICE",
         transport: Transport.REDIS,
         options: {
           host: 'localhost',
-          port: Number(process.env.SERVER_PORT)
+          port: 6379,
         }
       }
-    ]),
+    ])
   ],
   controllers: [MicroServiceController],
   providers: [
     {
-      provide: 'MICRO_SERVICE',
+      provide: 'MICRO_BASIC_SERVICE',
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return ClientProxyFactory.create({

@@ -1,12 +1,35 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Body, Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
+import { ClientProxy, ClientRedis } from '@nestjs/microservices';
 
 @Controller('micro-service')
 export class MicroServiceController {
-    constructor(@Inject('MICRO_SERVICE') private client: ClientProxy) {}
+    constructor(
+        @Inject('MICRO_BASIC_SERVICE') private client: ClientProxy,
+        @Inject('REDIS_SERVICE') private redis: ClientRedis
+    ) {}
 
     @Post('accumulator')
     accumulator(@Body('data') data: number[]){
-        return this.client.send({ cmd: 'accumulate' }, data);
+        return this.client.send<number[]>({ cmd: 'accumulate' }, data);
+    }
+
+    @Get('redis')
+    notification(@Param('key') key: string) {
+        return this.redis.send('notifications', key) ;
+    }
+
+    @Get('redis/keys')
+    getKeys() {
+        return this.redis.send('keys', '');
+    }
+
+    @Get('redis/key-type')
+    keyType(@Query('key') key: string) {
+        return this.redis.send('redis-key-type', key);
+    }
+
+    @Get('redis/list')
+    getList(@Query('key') key: string) {
+        return this.redis.send('redis-key-lrange', key);
     }
 }
