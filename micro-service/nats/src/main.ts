@@ -11,6 +11,8 @@ async function bootstrap() {
       }
     }
   );
-  await app.listen();
+  await app.listen().then(()=>{
+    console.log(`Micro-server: NATS start on: ${ 4222 }`);
+  });
 }
 bootstrap();
