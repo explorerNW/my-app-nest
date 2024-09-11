@@ -15,7 +15,7 @@ async function bootstrap() {
     }
   );
   await app.listen().then(()=>{
-    console.log(`Micro-server: basic start on: ${process.env.MICRO_SERVICE_PORT}`);
+    console.log(`Micro-server: TCP start on: ${process.env.MICRO_SERVICE_PORT}`);
   });
 }
 bootstrap();

@@ -15,6 +15,8 @@ async function bootstrap() {
       }
     }
   );
-  await app.listen();
+  await app.listen().then(()=>{
+    console.log(`Micro-server: rabbitMQ start on: ${ 5672 }`);
+  });
 }
 bootstrap();
