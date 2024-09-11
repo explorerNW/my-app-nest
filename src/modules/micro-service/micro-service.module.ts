@@ -25,7 +25,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: "MQTT_SERVICE",
         transport: Transport.MQTT,
         options: {
-          url: 'mqtt://localhost:1883',
+          url: 'mqtt://localhost:1884',
         }
       },
       {
@@ -34,7 +34,18 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         options: {
           servers: ['nats://localhost:4222'],
         }
-      }
+      },
+      {
+        name: 'RMQ_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'cats_queue',
+          queueOptions: {
+            durable: false
+          },
+        },
+      },
     ])
   ],
   controllers: [MicroServiceController],

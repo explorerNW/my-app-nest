@@ -16,7 +16,7 @@ export class AppController {
     return new Promise((resolve, reject) => {
       try {
         const topic = `${context.getTopic()}:test`;
-        const client = this.mqtt.connect('mqtt://localhost:1883');
+        const client = this.mqtt.connect('mqtt://localhost:1884');
         client.on('connect', () => {
           client.publish(topic, message);
           client.end();
