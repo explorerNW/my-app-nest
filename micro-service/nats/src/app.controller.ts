@@ -9,6 +9,6 @@ export class AppController {
 
   @MessagePattern('nast-message')
   message(@Payload() message: string, @Ctx() context: NatsContext) {
-    
+    return context.getSubject();
   }
 }

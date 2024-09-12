@@ -8,7 +8,6 @@ export class AppController {
 
   @MessagePattern('rmq-message')
   message(@Payload() message: string, @Ctx() context: RmqContext) {
-      console.log(context.getMessage());
-      return context.getMessage();
+      return { message: context.getMessage()};
   }
 }
