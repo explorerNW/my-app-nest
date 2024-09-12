@@ -71,7 +71,6 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## Stay in touch
 
 - Author - [Wang Nie](superexplorernw@163.com)
-- Website - [https://github.com/explorerNW](https://github.comexplorerNW/)
 
 ## License
 

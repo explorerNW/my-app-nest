@@ -43,12 +43,12 @@ export class MicroServiceController {
 
     @Post('message-nats')
     sendMessageToNAST(@Body('message') message: string) {
-        return this.mqtt.send('nast-message', message);
+        return this.nats.send('nast-message', message);
     }
 
     @Post('message-rmq')
     sendMessageRMQ(@Body('message') message: string) {
-        return this.mqtt.send('rmq-message', message);
+        return this.rmq.send('rmq-message', message);
     }
 
 }
