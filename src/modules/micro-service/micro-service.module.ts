@@ -46,9 +46,22 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           },
         },
       },
+      {
+        name: 'KAFKA_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'hero',
+            brokers: ['localhost:9092'],
+          },
+          consumer: {
+            groupId: 'hero-consumer'
+          }
+        },
+      },
     ])
   ],
   controllers: [MicroServiceController],
   providers: []
 })
-export class MicroServiceModule {}
+export class MicroServiceModule { }

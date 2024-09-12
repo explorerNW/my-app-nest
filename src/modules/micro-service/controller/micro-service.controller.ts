@@ -1,24 +1,30 @@
-import { Body, Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
-import { ClientMqtt, ClientNats, ClientProxy, ClientRedis, ClientRMQ } from '@nestjs/microservices';
+import { Body, Controller, Get, Inject, OnModuleInit, Param, Post, Query } from '@nestjs/common';
+import { ClientKafka, ClientMqtt, ClientNats, ClientProxy, ClientRedis, ClientRMQ } from '@nestjs/microservices';
 
 @Controller('micro-service')
-export class MicroServiceController {
+export class MicroServiceController implements OnModuleInit {
     constructor(
         @Inject('MICRO_BASIC_SERVICE') private client: ClientProxy,
         @Inject('REDIS_SERVICE') private redis: ClientRedis,
         @Inject('MQTT_SERVICE') private mqtt: ClientMqtt,
         @Inject('NATS_SERVICE') private nats: ClientNats,
         @Inject('RMQ_SERVICE') private rmq: ClientRMQ,
-    ) {}
+        @Inject('KAFKA_SERVICE') private kafka: ClientKafka,
+    ) { }
+
+    async onModuleInit() {
+        this.kafka.subscribeToResponseOf('kafka-message');
+        await this.kafka.connect();
+    }
 
     @Post('accumulator')
-    accumulator(@Body('data') data: number[]){
+    accumulator(@Body('data') data: number[]) {
         return this.client.send<number[]>({ cmd: 'accumulate' }, data);
     }
 
     @Get('redis')
     notification(@Param('key') key: string) {
-        return this.redis.send('notifications', key) ;
+        return this.redis.send('notifications', key);
     }
 
     @Get('redis/keys')
@@ -49,6 +55,11 @@ export class MicroServiceController {
     @Post('message-rmq')
     sendMessageRMQ(@Body('message') message: string) {
         return this.rmq.send('rmq-message', message);
+    }
+
+    @Post('message-kafka')
+    sendMessageKAFKA(@Body('message') message: string) {
+        return this.kafka.send('kafka-message', message);
     }
 
 }
