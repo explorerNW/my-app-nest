@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MicroServiceController } from './controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { join } from 'path';
+console.log(`path: ${join(__dirname)}`);
 
 @Module({
   imports: [
@@ -59,6 +61,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           }
         },
       },
+      {
+        name: 'GRPC_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+          package: 'hero',
+          protoPath: join(__dirname, 'hero/hero.proto'),
+        }
+      }
     ])
   ],
   controllers: [MicroServiceController],
