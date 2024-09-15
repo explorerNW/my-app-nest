@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MicroServiceController } from './controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-console.log(`path: ${join(__dirname)}`);
+import { CustomClientProxy } from './proxy';
 
 @Module({
   imports: [
@@ -68,7 +68,11 @@ console.log(`path: ${join(__dirname)}`);
           package: 'hero',
           protoPath: join(__dirname, 'hero/hero.proto'),
         }
-      }
+      },
+      {
+        name: 'CUSTOM_SERVICE',
+        customClass: CustomClientProxy
+      },
     ])
   ],
   controllers: [MicroServiceController],

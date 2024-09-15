@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Inject, OnModuleInit, Param, Post, Query } from '@nestjs/common';
 import { ClientKafka, ClientMqtt, ClientNats, ClientProxy, ClientRedis, ClientRMQ } from '@nestjs/microservices';
+import { CustomClientProxy } from '../proxy';
 
 @Controller('micro-service')
 export class MicroServiceController implements OnModuleInit {
@@ -10,6 +11,7 @@ export class MicroServiceController implements OnModuleInit {
         @Inject('NATS_SERVICE') private nats: ClientNats,
         @Inject('RMQ_SERVICE') private rmq: ClientRMQ,
         @Inject('KAFKA_SERVICE') private kafka: ClientKafka,
+        @Inject('CUSTOM_SERVICE') private custom: CustomClientProxy,
     ) { }
 
     async onModuleInit() {
@@ -60,6 +62,11 @@ export class MicroServiceController implements OnModuleInit {
     @Post('message-kafka')
     sendMessageKAFKA(@Body('message') message: string) {
         return this.kafka.send('kafka-message', message);
+    }
+
+    @Post('message-custom')
+    sendMessageCustom(@Body('message') message: string) {
+        return this.custom.send('custom-message', message);
     }
 
 }
