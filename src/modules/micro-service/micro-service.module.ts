@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { MicroServiceController } from './controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-console.log(`path: ${join(__dirname)}`);
 
 @Module({
   imports: [

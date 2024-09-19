@@ -1,5 +1,8 @@
-import { Body, Controller, Get, Inject, OnModuleInit, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Inject, OnModuleInit, Post, Query, UseFilters, UseInterceptors } from '@nestjs/common';
 import { ClientKafka, ClientMqtt, ClientNats, ClientProxy, ClientRedis, ClientRMQ } from '@nestjs/microservices';
+
+import { LoggingInterceptor } from '../../../interceptors';
+import { ExceptionFilter } from '../../../filters';
 
 @Controller('micro-service')
 export class MicroServiceController implements OnModuleInit {
@@ -18,12 +21,14 @@ export class MicroServiceController implements OnModuleInit {
     }
 
     @Post('accumulator')
+    @UseInterceptors(LoggingInterceptor)
+    @UseFilters(new ExceptionFilter())
     accumulator(@Body('data') data: number[]) {
         return this.client.send<number[]>({ cmd: 'accumulate' }, data);
     }
 
-    @Get('redis')
-    notification(@Param('key') key: string) {
+    @Get('redis/notifications')
+    notification(@Query('key') key: string) {
         return this.redis.send('notifications', key);
     }
 
