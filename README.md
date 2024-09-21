@@ -43,7 +43,7 @@
 1. redis
   ```bash
     docker pull redis
-    docker run --name myredis -d -p 6379:6379 -v :/data redis redis-server --appendonly yes
+    docker run --name myredis -d -p 6379:6379 -v :/data/redis redis redis-server --appendonly yes
   ```
 2. postgres
   ```bash
