@@ -74,6 +74,18 @@
   ```bash
     docker pull rabbitmq
     docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+
+    docker run -d -p 15673:15672 -p 5674:5672 \
+        --restart=always \
+        -e RABBITMQ_DEFAULT_VHOST=my_vhost  \
+        -e RABBITMQ_DEFAULT_USER=admin \
+        -e RABBITMQ_DEFAULT_PASS=admin123456 \
+        --hostname myRabbit \
+        --name rabbitmq-new\
+        rabbitmq:latest
+
+    docker exec -it 容器名/容器id rabbitmq-plugins enable rabbitmq_management
   ```
 
 ## Installation
