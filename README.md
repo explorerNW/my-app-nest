@@ -87,6 +87,21 @@
 
     docker exec -it 容器名/容器id rabbitmq-plugins enable rabbitmq_management
   ```
+6. mongodb
+  ```bash
+    docker pull mongo:latest
+    docker run --name mongo -p 27017:27017 -v /my/own/datadir:/data/db -d mongo
+
+    docker run -dit --name mongo \
+    -p 17017:27017 \
+    -v /data/mongo/config/mongod.conf:/etc/mongod.conf \
+    -v /data/mongo/data:/data/db \
+    -v /data/mongo/logs:/var/log/mongodb \
+    -e MONGO_INITDB_ROOT_USERNAME=admin \
+    -e MONGO_INITDB_ROOT_PASSWORD=123456 \
+    --restart=always  \
+    mongo
+  ```
 
 ## Installation
 
