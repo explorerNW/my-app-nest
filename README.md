@@ -48,7 +48,7 @@
 2. postgres
   ```bash
     docker pull postgres
-    docker run --name postgres -e POSTGRES_PASSWORD=admin@me -v /home/server-1/data/postgresql:/var/lib/postgresql/data -d postgres
+    docker run --name postgres -e POSTGRES_PASSWORD=admin@me -p 5432:5432 -v /home/server-1/data/postgresql:/var/lib/postgresql/data -d postgres
 
     docker exec -it postgres psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'admin@me';"
     docker exec -it postgres psql -U postgres -c "CREATE DATABASE db_nest;"
