@@ -90,7 +90,7 @@
 6. mongodb
   ```bash
     docker pull mongo:latest
-    docker run --name mongo -p 27017:27017 -v /my/own/datadir:/data/db -d mongo
+    docker run --name mongo -p 27017:27017 -v /home/server-1/data/postgres:/data/db -d mongo
 
     docker run -dit --name mongo \
     -p 17017:27017 \
