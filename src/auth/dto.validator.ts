@@ -6,6 +6,5 @@ export class UserLoginDTO {
 
     @IsString()
     @IsNotEmpty()
-    @Length(8, 20)
     password: string;
 }

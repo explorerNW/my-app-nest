@@ -21,7 +21,7 @@ export class UserService {
 
     getAll() {
         return this.userRepo.find({
-            select: ['id','firstName', 'lastName', 'email', 'createdAt', 'updatedAt', 'isActive']
+            select: ['id', 'firstName', 'lastName', 'email', 'createdAt', 'updatedAt', 'isActive', 'salary']
         });
     }
 

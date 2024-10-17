@@ -36,7 +36,7 @@ async function bootstrap() {
   await app.register(fastifyCsrf);
   await app.register(compression, { encodings: ['gzip', 'deflate'], brotliOptions: { params: { [constants.BROTLI_PARAM_QUALITY]: 4 } } });
   await app.register(fastifyMultipart);
-  await app.listen(process.env.SERVER_PORT, ()=>{
+  await app.listen(process.env.SERVER_PORT, '0.0.0.0', ()=>{
     console.log(`server start on: ${process.env.SERVER_PORT}`);
   });
 }
