@@ -60,14 +60,14 @@ import { join } from 'path';
           }
         },
       },
-      {
-        name: 'GRPC_SERVICE',
-        transport: Transport.GRPC,
-        options: {
-          package: 'hero',
-          protoPath: join(__dirname, 'hero/hero.proto'),
-        }
-      }
+      // {
+      //   name: 'GRPC_SERVICE',
+      //   transport: Transport.GRPC,
+      //   options: {
+      //     package: 'hero',
+      //     protoPath: join(__dirname, 'hero/hero.proto'),
+      //   }
+      // }
     ])
   ],
   controllers: [MicroServiceController],
