@@ -8,6 +8,7 @@ import {
 import { Request } from 'express';
 import { jwtConstants } from '../constant';
 import { AuthService } from '../auth.service';
+import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -20,6 +21,8 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
     try {
       const decodeToken: { id: string; email: string } = this.jwtService.decode(token);
+      
+      await lastValueFrom(this.authService.getAllStoredToken());
       const exist = this.authService.tokenList
         .map((tokenValue) => {
           return this.jwtService.decode(tokenValue);

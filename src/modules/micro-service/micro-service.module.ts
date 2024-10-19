@@ -47,19 +47,19 @@ import { MicroService } from './service';
           },
         },
       },
-      {
-        name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'hero',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'hero-consumer'
-          }
-        },
-      },
+      // {
+      //   name: 'KAFKA_SERVICE',
+      //   transport: Transport.KAFKA,
+      //   options: {
+      //     client: {
+      //       clientId: 'hero',
+      //       brokers: ['localhost:9092'],
+      //     },
+      //     consumer: {
+      //       groupId: 'hero-consumer'
+      //     }
+      //   },
+      // },
       // {
       //   name: 'GRPC_SERVICE',
       //   transport: Transport.GRPC,

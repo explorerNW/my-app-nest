@@ -6,6 +6,7 @@ import { UserLoginDTO } from '../dto.validator';
 import { MicroService } from '../../modules/micro-service';
 import { map, of, switchMap } from 'rxjs';
 import { AuthService } from '../auth.service';
+import { filter } from 'rxjs/operators';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +34,7 @@ export class AuthController {
                     `${this.key}:${user.email}`,
                     access_token,
                 ).pipe(
+                    filter((res)=> res === 'OK'),
                     switchMap(() => this.authService.getAllStoredToken(),
                     ),
                     map(() => {
