@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { FileUploadService } from './service/file-upload.service';
 import { FileUploadController } from './controller/file-upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
@@ -7,9 +7,11 @@ import { resolve } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
 import { File, FileSchema } from './file-db.schema';
 import { FileController } from './controller';
+import { AuthModule } from '../../auth';
 
 @Module({
   imports: [
+    forwardRef(() => AuthModule),
     MongooseModule.forFeature([{ name: File.name, schema: FileSchema }]),
     MulterModule.register({
       storage: diskStorage({
@@ -22,6 +24,6 @@ import { FileController } from './controller';
     }),
   ],
   providers: [FileUploadService],
-  controllers: [FileUploadController, FileController]
+  controllers: [FileUploadController, FileController],
 })
 export class FileUploadModule {}

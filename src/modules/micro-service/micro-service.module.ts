@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MicroServiceController } from './controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+import { MicroService } from './service';
 
 @Module({
   imports: [
@@ -47,19 +47,19 @@ import { join } from 'path';
           },
         },
       },
-      {
-        name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'hero',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'hero-consumer'
-          }
-        },
-      },
+      // {
+      //   name: 'KAFKA_SERVICE',
+      //   transport: Transport.KAFKA,
+      //   options: {
+      //     client: {
+      //       clientId: 'hero',
+      //       brokers: ['localhost:9092'],
+      //     },
+      //     consumer: {
+      //       groupId: 'hero-consumer'
+      //     }
+      //   },
+      // },
       // {
       //   name: 'GRPC_SERVICE',
       //   transport: Transport.GRPC,
@@ -71,6 +71,7 @@ import { join } from 'path';
     ])
   ],
   controllers: [MicroServiceController],
-  providers: []
+  providers: [MicroService],
+  exports: [MicroService]
 })
 export class MicroServiceModule { }

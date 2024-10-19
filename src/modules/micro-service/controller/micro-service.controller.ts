@@ -12,12 +12,12 @@ export class MicroServiceController implements OnModuleInit {
         @Inject('MQTT_SERVICE') private mqtt: ClientMqtt,
         @Inject('NATS_SERVICE') private nats: ClientNats,
         @Inject('RMQ_SERVICE') private rmq: ClientRMQ,
-        @Inject('KAFKA_SERVICE') private kafka: ClientKafka,
+        // @Inject('KAFKA_SERVICE') private kafka: ClientKafka,
     ) { }
 
     async onModuleInit() {
-        this.kafka.subscribeToResponseOf('kafka-message');
-        await this.kafka.connect();
+        // this.kafka.subscribeToResponseOf('kafka-message');
+        // await this.kafka.connect();
     }
 
     @Post('accumulator')
@@ -34,7 +34,7 @@ export class MicroServiceController implements OnModuleInit {
 
     @Get('redis/keys')
     getKeys() {
-        return this.redis.send('keys', '');
+        return this.redis.send('redis-keys', '');
     }
 
     @Get('redis/key-type')
@@ -64,7 +64,7 @@ export class MicroServiceController implements OnModuleInit {
 
     @Post('message-kafka')
     sendMessageKAFKA(@Body('message') message: string) {
-        return this.kafka.send('kafka-message', message);
+        // return this.kafka.send('kafka-message', message);
     }
 
 }
