@@ -34,7 +34,7 @@ export class MicroServiceController implements OnModuleInit {
 
     @Get('redis/keys')
     getKeys() {
-        return this.redis.send('keys', '');
+        return this.redis.send('redis-keys', '');
     }
 
     @Get('redis/key-type')

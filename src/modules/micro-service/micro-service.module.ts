@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MicroServiceController } from './controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+import { MicroService } from './service';
 
 @Module({
   imports: [
@@ -71,6 +71,7 @@ import { join } from 'path';
     ])
   ],
   controllers: [MicroServiceController],
-  providers: []
+  providers: [MicroService],
+  exports: [MicroService]
 })
 export class MicroServiceModule { }
