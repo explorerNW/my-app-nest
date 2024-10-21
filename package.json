@@ -28,6 +28,8 @@
     "commitlint": "commitlint --edit"
   },
   "dependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
     "@fastify/compress": "^7.0.3",
     "@fastify/cookie": "^9.4.0",
     "@fastify/csrf-protection": "^6.4.1",
@@ -35,6 +37,7 @@
     "@fastify/static": "^7.0.4",
     "@grpc/grpc-js": "^1.11.2",
     "@grpc/proto-loader": "^0.7.13",
+    "@nestjs/axios": "^3.0.3",
     "@nestjs/bull": "^10.2.1",
     "@nestjs/bullmq": "^10.2.1",
     "@nestjs/cache-manager": "^2.2.2",
@@ -60,6 +63,7 @@
     "@types/uuid": "^10.0.0",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.4",
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "bull": "^4.16.0",
     "bullmq": "^5.12.10",
