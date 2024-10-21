@@ -11,35 +11,31 @@ export interface IChipInfo {
 
 @Injectable()
 export class IotService {
+  private readonly url = `http://${environment.chipHost}`;
+
   constructor(private httpService: HttpService) {}
 
   getChipInfo(): Observable<AxiosResponse<{ data: IChipInfo }>> {
-    return this.httpService
-      .get(`http://${environment.chipHost}/chip-info`)
-      .pipe(
-        map((res) => {
-          return res.data;
-        }),
-      );
+    return this.httpService.get(`${this.url}/chip-info`).pipe(
+      map((res) => {
+        return res.data;
+      }),
+    );
   }
 
   lightsUp() {
-    return this.httpService
-      .post(`http://${environment.chipHost}/light_up`)
-      .pipe(
-        map((res) => {
-          return res.data;
-        }),
-      );
+    return this.httpService.post(`${this.url}/light_up`).pipe(
+      map((res) => {
+        return res.data;
+      }),
+    );
   }
 
   lightsDown() {
-    return this.httpService
-      .post(`http://${environment.chipHost}/light_down`)
-      .pipe(
-        map((res) => {
-          return res.data;
-        }),
-      );
+    return this.httpService.post(`${this.url}/light_down`).pipe(
+      map((res) => {
+        return res.data;
+      }),
+    );
   }
 }
