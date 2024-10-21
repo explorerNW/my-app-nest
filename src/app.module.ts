@@ -2,7 +2,13 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { init as postgresDBInit, mongo, User as UserEntity } from './db';
-import { ConfigModule, UserModule, CatModule, FileUploadModule, MicroServiceModule } from './modules';
+import {
+  ConfigModule,
+  UserModule,
+  CatModule,
+  FileUploadModule,
+  MicroServiceModule,
+} from './modules';
 import { AuthModule } from './auth';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { EventsGateway } from './gateway/events/events.gateway';
@@ -10,9 +16,10 @@ import { GatewayModule } from './gateway';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import type { RedisOptions } from 'ioredis';
-import * as redisStore  from 'cache-manager-redis-store';
+import * as redisStore from 'cache-manager-redis-store';
 import { TaskService } from './task.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { IotModule } from './modules/iot/iot.module';
 
 @Module({
   imports: [
@@ -35,26 +42,28 @@ import { ScheduleModule } from '@nestjs/schedule';
       {
         name: 'medium',
         ttl: 10000,
-        limit: 20
+        limit: 20,
       },
       {
         name: 'long',
         ttl: 60000,
-        limit: 100
-      }
+        limit: 100,
+      },
     ]),
     GatewayModule,
     FileUploadModule,
     MicroServiceModule,
+    IotModule,
   ],
   controllers: [AppController],
   providers: [
-    AppService, EventsGateway,
+    AppService,
+    EventsGateway,
     {
       provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor
+      useClass: CacheInterceptor,
     },
-    TaskService
+    TaskService,
   ],
 })
 export class AppModule {}
