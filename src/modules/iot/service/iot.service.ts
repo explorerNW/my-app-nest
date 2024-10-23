@@ -38,4 +38,12 @@ export class IotService {
       }),
     );
   }
+
+  lightsStatus() {
+    return this.httpService.post(`${this.url}/light_status`).pipe(
+      map((res) => {
+        return res.data;
+      }),
+    );
+  }
 }

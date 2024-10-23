@@ -20,28 +20,12 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     try {
-      const decodeToken: { id: string; email: string } = this.jwtService.decode(token);
-      
-      await lastValueFrom(this.authService.getAllStoredToken());
-      const exist = this.authService.tokenList
-        .map((tokenValue) => {
-          return this.jwtService.decode(tokenValue);
-        })
-        .map(
-          (decodeValue: {
-            id: string;
-            email: string;
-            iat: number;
-            exp: number;
-          }) => {
-            return { id: decodeValue.id, email: decodeValue.email };
-          },
-        )
-        .find(
-          (decodeValue) =>
-            decodeValue.id === decodeToken.id &&
-            decodeValue.email === decodeToken.email,
-        );
+      const decodeToken: { id: string; email: string } =
+        this.jwtService.decode(token);
+
+      const exist = await lastValueFrom(
+        this.authService.getTokenByEmail(decodeToken.email),
+      );
       if (!token || !exist) {
         throw new UnauthorizedException({
           success: false,
@@ -54,6 +38,9 @@ export class AuthGuard implements CanActivate {
       });
       request['user'] = payload;
     } catch (e) {
+      const decodeToken: { id: string; email: string } =
+        this.jwtService.decode(token);
+      this.authService.logout(decodeToken.email).subscribe(() => {});
       throw new UnauthorizedException({
         success: false,
         statusCode: 401,
