@@ -17,6 +17,10 @@ export class AuthService {
     return this.$tokenList;
   }
 
+  getTokenByEmail(email: string) {
+    return this.microService.getKeyValue(`${this.key}:${email}`);
+  }
+
   getAllStoredToken() {
     return this.microService.getKeys(`${this.key}:*`).pipe(
       map((keys: string[]) => {
@@ -31,5 +35,9 @@ export class AuthService {
         return list;
       }),
     );
+  }
+
+  logout(email: string) {
+    return this.microService.removeKey(`${this.key}:${email}`);
   }
 }

@@ -18,4 +18,9 @@ export class IotController {
   lightsDown() {
     return this.iotService.lightsDown();
   }
+
+  @Post('light-status')
+  lightsStatus() {
+    return this.iotService.lightsStatus();
+  }
 }

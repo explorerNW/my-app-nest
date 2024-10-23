@@ -1,6 +1,5 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
-import { TransformInterceptor } from './interceptors/transform';
 
 @Controller()
 export class AppController {
