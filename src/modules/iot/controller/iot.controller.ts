@@ -1,7 +1,9 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { IotService } from '../service';
+import { AuthGuard } from '../../../auth';
 
 @Controller('iot')
+@UseGuards(AuthGuard)
 export class IotController {
   constructor(private iotService: IotService) {}
   @Get('chip-info')

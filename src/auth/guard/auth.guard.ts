@@ -40,7 +40,7 @@ export class AuthGuard implements CanActivate {
     } catch (e) {
       const decodeToken: { id: string; email: string } =
         this.jwtService.decode(token);
-      this.authService.logout(decodeToken.email).subscribe(() => {});
+      this.authService.logout(decodeToken?.email).subscribe(() => {});
       throw new UnauthorizedException({
         success: false,
         statusCode: 401,
