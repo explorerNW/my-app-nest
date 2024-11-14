@@ -15,7 +15,8 @@ export class InitUser1724331525567 implements MigrationInterface {
     user.lastName = 'Nie';
     user.password = password;
     user.happinessScore = 100;
-    user.salary = 1000000;
+    user.sex = 'male';
+    user.salary = '¥1000000';
     user.confirmed = false;
     user.forgotPasswordLocked = false;
     user.createdAt = new Date().toUTCString();
@@ -40,5 +41,7 @@ export class InitUser1724331525567 implements MigrationInterface {
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    queryRunner;
+  }
 }

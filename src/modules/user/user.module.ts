@@ -10,23 +10,25 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { QueuesModule } from '../queues';
 import { LoggerModule } from '../logger';
+import { MicroServiceModule } from '../micro-service';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([UserEntity, UserSchema]),
-        forwardRef(() => AuthModule),
-        MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }]),
-        QueuesModule,
-        LoggerModule,
-    ],
-    providers: [
-        UserService,
-        {
-            provide: APP_GUARD,
-            useClass: ThrottlerGuard
-        }
-    ],
-    controllers: [UserController],
-    exports: [UserService]
+  imports: [
+    TypeOrmModule.forFeature([UserEntity, UserSchema]),
+    forwardRef(() => AuthModule),
+    MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }]),
+    QueuesModule,
+    LoggerModule,
+    MicroServiceModule,
+  ],
+  providers: [
+    UserService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
+  controllers: [UserController],
+  exports: [UserService],
 })
 export class UserModule {}

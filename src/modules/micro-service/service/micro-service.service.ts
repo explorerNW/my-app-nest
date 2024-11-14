@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRedis } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import { User } from 'src/db';
 
 @Injectable()
 export class MicroService {
@@ -19,5 +21,13 @@ export class MicroService {
 
   removeKey(key: string) {
     return this.redis.send('redis-delete-key', { key });
+  }
+
+  hSet(key: string, value: any): Observable<User[]> {
+    return this.redis.send('redis-hset', { key, value });
+  }
+
+  hGet(key: string) {
+    return this.redis.send('redis-hget', { key });
   }
 }
