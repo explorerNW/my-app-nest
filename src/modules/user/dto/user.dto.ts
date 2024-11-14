@@ -2,6 +2,7 @@ import {
   IsBoolean,
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -15,6 +16,11 @@ export class UserDTO {
 
   @IsEmail()
   email: string;
+
+  sex: 'male' | 'female';
+
+  @IsNumber()
+  age: number;
 
   @IsNotEmpty()
   password: string;
@@ -33,6 +39,12 @@ export class UserUpdateDTO {
   @IsEmail()
   email?: string;
 
+  @IsNumber()
+  age?: number;
+
+  @IsString()
+  salary?: string;
+
   @IsOptional()
   @IsString()
   password?: string;
@@ -40,6 +52,7 @@ export class UserUpdateDTO {
   @IsOptional()
   @IsBoolean()
   confirmed?: boolean;
+
   @IsOptional()
   @IsBoolean()
   forgotPasswordLocked?: boolean;

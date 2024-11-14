@@ -4,6 +4,8 @@ import { User, User as UserEntity } from 'src/db';
 import { FindOptionsSelect, Repository } from 'typeorm';
 import { QueuesService } from '../../queues';
 import { LoggerService } from 'src/modules/logger';
+import { MicroService } from 'src/modules/micro-service';
+import { concatMap, from, map, of, switchMap } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -14,6 +16,8 @@ export class UserService {
     'firstName',
     'lastName',
     'email',
+    'age',
+    'sex',
     'createdAt',
     'updatedAt',
     'isActive',
@@ -25,14 +29,30 @@ export class UserService {
     private readonly userRepo: Repository<UserEntity>,
     private readonly queue: QueuesService,
     readonly myLogger: LoggerService,
+    private microService: MicroService,
   ) {
     this.logger = myLogger;
   }
 
   getAll() {
-    return this.userRepo.find({
-      select: this.specificFileds as FindOptionsSelect<User>,
-    });
+    const key = 'user-list';
+    return this.microService.hGet(key).pipe(
+      concatMap((res) => {
+        if (res && res.length) {
+          return of(res);
+        } else {
+          return from(
+            this.userRepo.find({
+              select: this.specificFileds as FindOptionsSelect<User>,
+            }),
+          ).pipe(
+            concatMap((users) => {
+              return this.microService.hSet(key, users).pipe(map(() => users));
+            }),
+          );
+        }
+      }),
+    );
   }
 
   create(user: UserEntity) {
@@ -68,10 +88,16 @@ export class UserService {
   }
 
   update(id: string, user: Omit<UserEntity, 'id' | 'createdAt'>) {
-    return this.userRepo
-      .update(id, { ...user })
-      .then((res) => res)
-      .catch((e) => e);
+    return this.microService.removeKey('user-list').pipe(
+      switchMap(() =>
+        from(
+          this.userRepo
+            .update(id, { ...user })
+            .then((res) => res)
+            .catch((e) => e),
+        ),
+      ),
+    );
   }
 
   queueHandler(name: string, data) {

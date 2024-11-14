@@ -46,4 +46,14 @@ export class AppController {
     return this.appService.deleteKey(payload.key);
   }
 
+  @MessagePattern('redis-hset')
+  hSet(@Payload() payload: { key: string; value: any }){
+    return this.appService.hSet(payload.key, payload.value);
+  }
+
+  @MessagePattern('redis-hget')
+  hGet(@Payload() payload: { key: string; }){
+    return this.appService.hGet(payload.key);
+  }
+
 }

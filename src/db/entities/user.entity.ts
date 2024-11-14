@@ -1,5 +1,12 @@
-import { Exclude } from "class-transformer";
-import { Column, CreateDateColumn, Entity, EntitySchema, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Exclude } from 'class-transformer';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  EntitySchema,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -28,11 +35,17 @@ export class User {
   @CreateDateColumn()
   createdAt: string;
 
+  @Column({ nullable: true })
+  age: number;
+
   @Column({ default: 0 })
   happinessScore: number;
 
-  @Column({ default: 0 })
-  salary: number;
+  @Column({ default: '¥1000000' })
+  salary: string;
+
+  @Column({ default: 'male' })
+  sex: 'male' | 'female';
 
   @UpdateDateColumn({ nullable: true })
   updatedAt: string;
@@ -68,7 +81,7 @@ export const UserSchema = new EntitySchema({
       type: String,
     },
     happinessScore: {
-      type: Number
+      type: Number,
     },
     salary: {
       type: Number,
@@ -78,8 +91,8 @@ export const UserSchema = new EntitySchema({
     },
     isActive: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   relations: {},
 });
