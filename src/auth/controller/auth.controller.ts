@@ -30,19 +30,23 @@ export class AuthController {
           email: existUser.email,
         });
         // store token to redis
-        return this.microService
-          .setKeyValue(`${this.key}:${user.email}`, access_token)
-          .pipe(
-            filter((res) => res === 'OK'),
-            map(() => {
-              return {
-                success: true,
-                login_success: true,
-                user_id: existUser.id,
-                access_token,
-              };
-            }),
-          );
+        return this.microService.removeKey(`${this.key}:${user.email}`).pipe(
+          switchMap(() =>
+            this.microService
+              .setKeyValue(`${this.key}:${user.email}`, access_token)
+              .pipe(
+                filter((res) => res === 'OK'),
+                map(() => {
+                  return {
+                    success: true,
+                    login_success: true,
+                    user_id: existUser.id,
+                    access_token,
+                  };
+                }),
+              ),
+          ),
+        );
       } else {
         return { success: false, login_success: false };
       }
@@ -53,20 +57,7 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Body('email') email: string) {
-    return this.authService.getAllStoredToken().pipe(
-      switchMap(() => this.microService.getKeyValue(`${this.key}:${email}`)),
-      map((token) => {
-        const decodeToken: { id: string; email: string } =
-          this.jwtService.decode(token);
-        this.authService.tokenList = this.authService.tokenList
-          .map((tokenValue) => this.jwtService.decode(tokenValue))
-          .filter(
-            (tokenValue: { id: string; email: string }) =>
-              tokenValue.id !== tokenValue.id &&
-              tokenValue.email !== decodeToken.email,
-          );
-      }),
-      switchMap(() => this.microService.removeKey(`${this.key}:${email}`)),
+    return this.microService.removeKey(`${this.key}:${email}`).pipe(
       map(() => {
         return { success: true, logout: true };
       }),

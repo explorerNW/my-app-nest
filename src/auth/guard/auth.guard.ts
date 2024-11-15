@@ -20,8 +20,9 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     try {
-      const decodeToken: { id: string; email: string } =
-        this.jwtService.decode(token);
+      const decodeToken = this.jwtService.decode<{ id: string; email: string }>(
+        token,
+      );
 
       const exist = await lastValueFrom(
         this.authService.getTokenByEmail(decodeToken.email),
@@ -38,9 +39,6 @@ export class AuthGuard implements CanActivate {
       });
       request['user'] = payload;
     } catch (e) {
-      const decodeToken: { id: string; email: string } =
-        this.jwtService.decode(token);
-      this.authService.logout(decodeToken?.email).subscribe(() => {});
       throw new UnauthorizedException({
         success: false,
         statusCode: 401,

@@ -26,11 +26,6 @@ export class AppController {
     return this.appService.keyType(key);
   }
 
-  @MessagePattern('redis-key-lrange')
-  lrange(@Payload() key: string) {
-    return this.appService.getList(key);
-  }
-
   @MessagePattern('redis-key-value')
   getKeyValue(@Payload() key: string) {
     return this.appService.get(key);
@@ -46,14 +41,45 @@ export class AppController {
     return this.appService.deleteKey(payload.key);
   }
 
+  @MessagePattern('redis-lrem')
+  lrem(@Payload() payload: { key: string; count: number; element: string }) {
+    return this.appService.lrem(payload.key, payload.count, payload.element);
+  }
+
   @MessagePattern('redis-hset')
   hSet(@Payload() payload: { key: string; value: any }){
     return this.appService.hSet(payload.key, payload.value);
   }
 
   @MessagePattern('redis-hget')
-  hGet(@Payload() payload: { key: string; }){
-    return this.appService.hGet(payload.key);
+  hGet(@Payload() payload: { key: string; field: string }){
+    return this.appService.hGet(payload.key, payload.field);
   }
+
+  @MessagePattern('redis-hgetAll')
+  hGetAll(@Payload() payload: { key: string; }){
+    return this.appService.hGetAll(payload.key);
+  }
+
+  @MessagePattern('redis-rpush')
+  rPush(@Payload() payload: { key: string; value: string }) {
+    return this.appService.listRpush(payload.key, payload.value);
+  }
+
+  @MessagePattern('redis-batchRpush')
+  batchRpush(@Payload() payload: { key: string; values: string[] }) {
+    return this.appService.batchRpush(payload.key, payload.values);
+  }
+
+  @MessagePattern('redis-batchCommandsExc')
+  batchCommandsExc(@Payload() payload: { command: string; key: string; value: any }[]) {
+    return this.appService.batchCommandsExc(payload);
+  }
+
+  @MessagePattern('redis-lrange')
+  lrange(@Payload() payload: { key: string; start: number; end: number }) {
+    return this.appService.lrange(payload.key, payload.start, payload.end);
+  }
+  
 
 }

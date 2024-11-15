@@ -17,7 +17,7 @@ export class AppService {
     return await this.redis.hset(key, value);
   }
 
-  async hGet(key: string) {
+  async hGetAll(key: string) {
     return await this.redis.hgetall(key).then((res) => {
       if (Object.keys(res).length) {
         return res;
@@ -25,6 +25,65 @@ export class AppService {
         return [];
       }
     });
+  }
+
+  async hGet(key: string, field: string) {
+    return await this.redis.hget(key, field);
+  }
+
+  async listRpush(key: string, value: string) {
+    return await this.redis.rpush(key, value);
+  }
+
+  async batchRpush(listName: string, values: string[]) {
+    const pipeline = this.redis.pipeline();
+    for (let i = 0; i < values.length; i++) {
+      pipeline.rpush(listName, values[i]);
+    }
+
+    return pipeline
+      .exec((error, result) => {
+        if (error) {
+          return error;
+        }
+        return result[1];
+      })
+      .then((res) => {
+        pipeline.quit();
+        return res;
+      });
+  }
+
+  async batchCommandsExc(excs: { command: string; key: string; value: any }[]) {
+    const pipeline = this.redis.pipeline();
+    excs.forEach((exc) => {
+      if (exc.value) {
+        pipeline[exc.command](exc.key, exc.value);
+      } else {
+        pipeline[exc.command](exc.key);
+      }
+    });
+    const result = await pipeline
+      .exec()
+      .then((res) => {
+        pipeline.quit();
+        return res;
+      });
+
+    return result.map((item) => {
+      if (
+        item &&
+        ![undefined, null].includes(item[1]) &&
+        !Object.keys(item[1]).length
+      ) {
+        return null;
+      }
+      return item[1];
+    });
+  }
+
+  async lrange(key: string, start: number, end: number) {
+    return await this.redis.lrange(key, start, end);
   }
 
   async keys() {
@@ -45,5 +104,9 @@ export class AppService {
 
   async deleteKey(key: string) {
     return await this.redis.del(key);
+  }
+
+  async lrem(key: string, count: number = 0, element: string) {
+    return await this.redis.lrem(key, count, element);
   }
 }

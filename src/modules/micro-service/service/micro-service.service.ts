@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRedis } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { User } from 'src/db';
 
 @Injectable()
 export class MicroService {
@@ -23,11 +22,37 @@ export class MicroService {
     return this.redis.send('redis-delete-key', { key });
   }
 
-  hSet(key: string, value: any): Observable<User[]> {
+  lrem(key: string, count: number = 0, element: string) {
+    return this.redis.send('redis-lrem', { key, count, element });
+  }
+
+  hSet<T>(key: string, value: T) {
     return this.redis.send('redis-hset', { key, value });
   }
 
-  hGet(key: string) {
-    return this.redis.send('redis-hget', { key });
+  hGet(key: string, field: string) {
+    return this.redis.send('redis-hget', { key, field });
+  }
+
+  hGetAll<T>(key: string): Observable<T> {
+    return this.redis.send('redis-hgetAll', { key });
+  }
+
+  rPush(key: string, value: string) {
+    return this.redis.send('redis-rpush', { key, value });
+  }
+
+  lRange(key: string, start: number, end: number): Observable<string[]> {
+    return this.redis.send('redis-lrange', { key, start, end });
+  }
+
+  batchRpush(key: string, values: string[]) {
+    return this.redis.send('redis-batchRpush', { key, values });
+  }
+
+  batchCommandsExc<T>(
+    excs: { command: string; key: string; value?: T }[],
+  ): Observable<T> {
+    return this.redis.send('redis-batchCommandsExc', excs);
   }
 }
