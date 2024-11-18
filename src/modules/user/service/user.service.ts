@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User, User as UserEntity } from 'src/db';
-import { FindOptionsSelect, Repository } from 'typeorm';
+import { FindOptionsSelect, Raw, Repository } from 'typeorm';
 import { QueuesService } from '../../queues';
 import { LoggerService } from 'src/modules/logger';
 import { MicroService } from 'src/modules/micro-service';
@@ -10,7 +10,7 @@ import {
   concatMap,
   from,
   map,
-  mergeMap,
+  Observable,
   of,
   switchMap,
 } from 'rxjs';
@@ -32,6 +32,8 @@ export class UserService {
     'salary',
   ];
 
+  private listKeyName = '';
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
@@ -42,67 +44,86 @@ export class UserService {
     this.logger = myLogger;
   }
 
-  getAll() {
-    return this.microService.lRange('user:ids', 0, -1).pipe(
-      mergeMap((ids) => {
-        if (ids.length) {
-          const excs = ids.map((id) => {
-            return {
-              command: 'hgetall',
-              key: `user:${id}`,
-            };
-          });
-          return this.microService.batchCommandsExc<User[]>(excs).pipe(
-            map((res) => {
-              return res.filter((res) => res);
-            }),
-          );
-        } else {
-          return of([]);
-        }
-      }),
-      concatMap((res: User[]) => {
-        if (res && res.length) {
-          return of(res);
+  getAll(start: number = 0, end: number = -1) {
+    const key = `user:page:start:${start}:end:${end}`;
+    return this.microService.getKeyValue<string>(key).pipe(
+      concatMap((users) => {
+        users = JSON.parse(users);
+        if (users?.length) {
+          return of(users);
         } else {
           return from(
             this.userRepo.find({
               select: this.specificFileds as FindOptionsSelect<User>,
+              order: { createdAt: 'ASC' },
+              skip: start,
+              take: end - start + 1,
             }),
           ).pipe(
-            concatMap((users) => {
-              const ids = users.map((user) => user.id);
-              return this.microService.removeKey('user:ids').pipe(
-                concatMap(() => {
-                  return this.microService.batchRpush('user:ids', ids).pipe(
-                    switchMap(() => {
-                      const excs = users.map((user) => {
-                        return {
-                          command: 'hset',
-                          key: `user:${user.id}`,
-                          value: user,
-                        };
-                      });
-                      return this.microService.batchCommandsExc<User>(excs);
-                    }),
-                    map(() => {
-                      return users;
-                    }),
-                  );
-                }),
-              );
+            switchMap((users) => {
+              return this.microService
+                .batchCommandsExc([
+                  {
+                    command: 'del',
+                    key,
+                  },
+                  {
+                    command: 'set',
+                    key,
+                    value: JSON.stringify(users),
+                  },
+                  {
+                    command: 'expire',
+                    key,
+                    value: '1800',
+                  },
+                ])
+                .pipe(map(() => users));
             }),
           );
         }
       }),
+      switchMap((users) =>
+        this.microService.getKeyValue('user:total').pipe(
+          switchMap((count) => {
+            count = Number(count);
+            if (count) {
+              return of({ users, totalLength: count });
+            } else {
+              return from(this.userRepo.count()).pipe(
+                switchMap((count) =>
+                  this.microService
+                    .setKeyValue('user:total', count.toString())
+                    .pipe(
+                      map(() => {
+                        return { users, totalLength: count };
+                      }),
+                    ),
+                ),
+              );
+            }
+          }),
+        ),
+      ),
     );
   }
 
-  create(user: UserEntity) {
-    return this.userRepo
-      .save(user)
-      .then((res) => res)
-      .catch((e) => e);
+  create<T>(user: UserEntity): Observable<T> {
+    return from(
+      this.userRepo
+        .save(user)
+        .then((res) => res)
+        .catch((e) => e),
+    ).pipe(
+      switchMap((res) =>
+        this.resetPagenation().pipe(
+          map(() => {
+            return res;
+          }),
+        ),
+      ),
+      catchError((e) => of({ success: false, message: e })),
+    );
   }
 
   findOne(id: string) {
@@ -121,41 +142,69 @@ export class UserService {
     return this.userRepo.findOne({ where: { email } });
   }
 
-  deleteOne(id: string) {
-    return this.userRepo
-      .findOne({ where: { id } })
-      .then(async (user) => {
-        if (user) {
-          await this.userRepo.remove(user);
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .catch((e) => e);
+  findByLike(value: string) {
+    return this.userRepo.find({
+      where: [
+        {
+          firstName: Raw((alias) => `${alias} LIKE '%${value}%'`),
+        },
+        {
+          lastName: Raw((alias) => `${alias} LIKE '%${value}%'`),
+        },
+        {
+          email: Raw((alias) => `${alias} LIKE '%${value}%'`),
+        },
+      ],
+    });
   }
 
-  update(id: string, user: Omit<UserEntity, 'id' | 'createdAt'>) {
-    return this.microService.removeKey(`user:${id}`).pipe(
-      switchMap(() => this.microService.removeKey('user:ids')),
-      switchMap(() =>
-        from(
-          this.userRepo
-            .update(id, { ...user })
-            .then((res) => res)
-            .catch((e) => e),
+  deleteOne<T>(id: string): Observable<T> {
+    return from(
+      this.userRepo
+        .findOne({ where: { id } })
+        .then(async (user) => {
+          if (user) {
+            await this.userRepo.remove(user);
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .catch((e) => e),
+    ).pipe(
+      switchMap((res) =>
+        this.resetPagenation().pipe(
+          map(() => {
+            return res;
+          }),
         ),
       ),
-      map((res) => {
-        setTimeout(async () => {
-          await from(
-            this.microService
-              .removeKey(`user:${id}`)
-              .pipe(switchMap(() => this.microService.removeKey('user:ids'))),
-          );
-        }, 500);
-        return res;
-      }),
+      catchError((e) => of({ success: false, message: e })),
+    );
+  }
+
+  resetPagenation() {
+    return this.microService
+      .scan<[record: number, string[]]>(`user:page:start*:end:*`)
+      .pipe(
+        switchMap(([, keys]) => {
+          if (keys.length) {
+            return this.microService
+              .removeKey(keys)
+              .pipe(switchMap(() => this.microService.removeKey('user:total')));
+          }
+        }),
+      );
+  }
+
+  update(id: string, user: User) {
+    return from(
+      this.userRepo
+        .update(id, { ...user })
+        .then((res) => res)
+        .catch((e) => e),
+    ).pipe(
+      switchMap((res) => this.resetPagenation().pipe(map(() => res))),
       catchError((e) => of({ success: false, message: e })),
     );
   }

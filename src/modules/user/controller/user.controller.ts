@@ -30,8 +30,8 @@ export class UserController {
 
   @Get('all')
   @Roles(Role.Admin)
-  getAll() {
-    return this.userService.getAll();
+  getAll(@Query('start') start: number, @Query('end') end: number) {
+    return this.userService.getAll(start || 0, end || -1);
   }
 
   @Post('create')
@@ -58,23 +58,21 @@ export class UserController {
       age: user.age,
       sex: user.sex,
       happinessScore: 100,
-      salary: '¥1000000',
+      salary: user.salary || '¥1000000',
       confirmed: false,
       forgotPasswordLocked: false,
       createdAt: new Date().toUTCString(),
       updatedAt: null,
       isActive: true,
     };
-    return this.userService
-      .create(user_entity)
-      .then((res: UserEntity) => {
+    return this.userService.create(user_entity).pipe(
+      map((res: UserEntity) => {
         if (res.id === user_entity.id) {
           return { success: true, user_id: res.id };
         }
-      })
-      .catch((e) => {
-        return { success: false, message: e };
-      });
+      }),
+      catchError((e) => of({ success: false, message: e })),
+    );
   }
 
   @Get(':id')
@@ -85,6 +83,11 @@ export class UserController {
       }
       return user;
     });
+  }
+
+  @Get('findByLike')
+  findByLike(@Query('value') value: string) {
+    return this.userService.findByLike(value);
   }
 
   @Post('update/:id')
@@ -110,18 +113,15 @@ export class UserController {
   @Delete(':id')
   @Roles(Role.Admin)
   deleteOne(@Param('id') id: string) {
-    return this.userService
-      .deleteOne(id)
-      .then((res) => {
+    return this.userService.deleteOne<boolean>(id).pipe(
+      map((res) => {
         if (res) {
           return { success: true };
         } else {
           return { success: false, user_exist: false };
         }
-      })
-      .catch((e) => {
-        return { success: false, message: e };
-      });
+      }),
+    );
   }
 
   @Get('process')

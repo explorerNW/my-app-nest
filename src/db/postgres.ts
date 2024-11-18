@@ -1,9 +1,10 @@
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-export const init = (entities = []) => TypeOrmModule.forRoot({
+export const init = (entities = []) =>
+  TypeOrmModule.forRoot({
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
     port: Number(process.env.POSTGRES_PORT),
@@ -11,5 +12,5 @@ export const init = (entities = []) => TypeOrmModule.forRoot({
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
     entities: entities,
-    synchronize: true,
-});
+    synchronize: false,
+  });

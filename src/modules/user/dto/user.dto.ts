@@ -22,6 +22,9 @@ export class UserDTO {
   @IsNumber()
   age: number;
 
+  @IsString()
+  salary: string;
+
   @IsNotEmpty()
   password: string;
 }

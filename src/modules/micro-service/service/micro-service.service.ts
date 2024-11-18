@@ -10,7 +10,7 @@ export class MicroService {
     return this.redis.send('redis-keys-pattern', pattern);
   }
 
-  getKeyValue(key: string) {
+  getKeyValue<T>(key: string): Observable<T> {
     return this.redis.send('redis-key-value', key);
   }
 
@@ -18,7 +18,7 @@ export class MicroService {
     return this.redis.send('redis-set-key-value', { key, value });
   }
 
-  removeKey(key: string) {
+  removeKey(key: string | string[]) {
     return this.redis.send('redis-delete-key', { key });
   }
 
@@ -46,6 +46,10 @@ export class MicroService {
     return this.redis.send('redis-lrange', { key, start, end });
   }
 
+  llen(key: string) {
+    return this.redis.send('redis-llen', { key });
+  }
+
   batchRpush(key: string, values: string[]) {
     return this.redis.send('redis-batchRpush', { key, values });
   }
@@ -54,5 +58,9 @@ export class MicroService {
     excs: { command: string; key: string; value?: T }[],
   ): Observable<T> {
     return this.redis.send('redis-batchCommandsExc', excs);
+  }
+
+  scan<T>(pattern: string): Observable<T> {
+    return this.redis.send('redis-scan', { pattern });
   }
 }

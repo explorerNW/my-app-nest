@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Ctx, MessagePattern, Payload, RedisContext } from '@nestjs/microservices';
+import { RedisKey } from 'ioredis';
 
 @Controller()
 export class AppController {
@@ -37,7 +38,7 @@ export class AppController {
   }
 
   @MessagePattern('redis-delete-key')
-  deleteKey(@Payload() payload: { key: string;}) {
+  deleteKey(@Payload() payload: { key: RedisKey[];}) {
     return this.appService.deleteKey(payload.key);
   }
 
@@ -79,6 +80,16 @@ export class AppController {
   @MessagePattern('redis-lrange')
   lrange(@Payload() payload: { key: string; start: number; end: number }) {
     return this.appService.lrange(payload.key, payload.start, payload.end);
+  }
+
+  @MessagePattern('redis-llen')
+  llen(@Payload() payload: { key: string }){
+    return this.appService.llen(payload.key);
+  }
+
+  @MessagePattern('redis-scan')
+  scan(@Payload() payload: { pattern: string }){
+    return this.appService.scan(payload.pattern);
   }
   
 
