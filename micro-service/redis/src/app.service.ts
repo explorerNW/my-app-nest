@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Redis } from 'ioredis';
+import { Redis, RedisKey } from 'ioredis';
 
 @Injectable()
 export class AppService {
@@ -86,6 +86,14 @@ export class AppService {
     return await this.redis.lrange(key, start, end);
   }
 
+  async llen(key: string) {
+    return await this.redis.llen(key);
+  }
+
+  async scan(pattern: string) {
+    return await this.redis.scan(0, 'MATCH', pattern);
+  }
+
   async keys() {
     return await this.redis.keys('*');
   }
@@ -102,7 +110,7 @@ export class AppService {
     return await this.redis.lrange(key, 0, -1);
   }
 
-  async deleteKey(key: string) {
+  async deleteKey(key: RedisKey[]) {
     return await this.redis.del(key);
   }
 
