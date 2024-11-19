@@ -185,7 +185,7 @@ export class UserService {
 
   resetPagenation() {
     return this.microService
-      .scan<[record: number, string[]]>(`user:page:start*:end:*`)
+      .scan<[record: number, string[]]>(`user:page:start*:end:*`, 20)
       .pipe(
         switchMap(([, keys]) => {
           if (keys.length) {

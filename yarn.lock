@@ -1392,14 +1392,14 @@
   dependencies:
     uuid "9.0.1"
 
-"@nestjs/websockets@^10.4.1":
-  version "10.4.1"
-  resolved "https://registry.npmjs.org/@nestjs/websockets/-/websockets-10.4.1.tgz#67d370fe6d4215603e68e56666709576111a5d22"
-  integrity sha512-p0Eq94WneczV2bnLEu9hl24iCIfH5eUCGgBuYOkVDySBwvya5L+gD4wUoqIqGoX1c6rkhQa+pMR7pi1EY4t93w==
+"@nestjs/websockets@^10.4.8":
+  version "10.4.8"
+  resolved "https://registry.npmmirror.com/@nestjs/websockets/-/websockets-10.4.8.tgz#9c2b982059e850a56999f56c87ac3a88acbce4ea"
+  integrity sha512-IpObWsZvjjUxmBuIF/AkcyXrFFzwNYNsw2reZXHy7C31wJsYAjwr6rHMSRGyqsxfqTA2DqjCczorewM6BAEXig==
   dependencies:
     iterare "1.2.1"
     object-hash "3.0.0"
-    tslib "2.6.3"
+    tslib "2.7.0"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -7953,7 +7953,7 @@ tslib@2.6.3, tslib@^2.1.0, tslib@^2.5.0, tslib@^2.6.2:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.3.tgz#0438f810ad7a9edcde7a241c3d80db693c8cbfe0"
   integrity sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==
 
-tslib@^2.0.0:
+tslib@2.7.0, tslib@^2.0.0:
   version "2.7.0"
   resolved "https://registry.npmmirror.com/tslib/-/tslib-2.7.0.tgz#d9b40c5c40ab59e8738f297df3087bf1a2690c01"
   integrity sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==

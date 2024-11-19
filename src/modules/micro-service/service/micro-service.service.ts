@@ -60,7 +60,7 @@ export class MicroService {
     return this.redis.send('redis-batchCommandsExc', excs);
   }
 
-  scan<T>(pattern: string): Observable<T> {
-    return this.redis.send('redis-scan', { pattern });
+  scan<T>(pattern: string, position: number): Observable<T> {
+    return this.redis.send('redis-scan', { pattern, position });
   }
 }

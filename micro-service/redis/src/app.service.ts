@@ -90,8 +90,8 @@ export class AppService {
     return await this.redis.llen(key);
   }
 
-  async scan(pattern: string) {
-    return await this.redis.scan(0, 'MATCH', pattern);
+  async scan(pattern: string, postion: number = 0) {
+    return await this.redis.scan(postion, 'MATCH', pattern);
   }
 
   async keys() {

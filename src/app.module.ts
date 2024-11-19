@@ -11,7 +11,6 @@ import {
 } from './modules';
 import { AuthModule } from './auth';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { EventsGateway } from './gateway/events/events.gateway';
 import { GatewayModule } from './gateway';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR } from '@nestjs/core';
@@ -19,7 +18,8 @@ import type { RedisOptions } from 'ioredis';
 import * as redisStore from 'cache-manager-redis-store';
 import { TaskService } from './task.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { IotModule } from './modules/iot/iot.module';
+import { IotModule } from './modules/iot';
+import { SseModule } from './modules/sse';
 
 @Module({
   imports: [
@@ -54,11 +54,11 @@ import { IotModule } from './modules/iot/iot.module';
     FileUploadModule,
     MicroServiceModule,
     IotModule,
+    SseModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    EventsGateway,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
