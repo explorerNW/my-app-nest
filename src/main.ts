@@ -13,7 +13,7 @@ import fastifyCsrf from '@fastify/csrf-protection';
 import { LoggerService } from './modules/logger/logger.service';
 import fastifyCookie from '@fastify/cookie';
 import compression from '@fastify/compress';
-import * as fastifyMultipart from '@fastify/multipart';
+import fastifyMultipart from '@fastify/multipart';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { constants } from 'zlib';
 dotenv.config();

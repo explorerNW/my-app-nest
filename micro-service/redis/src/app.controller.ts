@@ -88,8 +88,8 @@ export class AppController {
   }
 
   @MessagePattern('redis-scan')
-  scan(@Payload() payload: { pattern: string }){
-    return this.appService.scan(payload.pattern);
+  scan(@Payload() payload: { pattern: string; position: number; }){
+    return this.appService.scan(payload.pattern, payload.position);
   }
   
 
