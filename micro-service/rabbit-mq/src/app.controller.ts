@@ -1,13 +1,31 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
+import {
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
+import { io, Socket } from 'socket.io-client';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  socketIO: Socket;
+  channel = null;
+  constructor(private readonly appService: AppService) {
+    this.socketIO = io('ws://s0.v100.vip:16220');
+  }
 
   @MessagePattern('rmq-message')
-  message(@Payload() message: string, @Ctx() context: RmqContext) {
-      return { message: context.getMessage()};
+  async message(
+    @Payload() payload: { channel: string; data: string },
+    @Ctx() context: RmqContext,
+  ) {
+    this.socketIO.connect();
+    this.socketIO.emit('channel-message', {
+      channel: payload.channel,
+      message: payload.data,
+    });
+    return { message_send: true };
   }
 }

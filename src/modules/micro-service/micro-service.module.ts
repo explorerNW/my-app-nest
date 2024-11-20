@@ -7,43 +7,43 @@ import { MicroService } from './service';
   imports: [
     ClientsModule.register([
       {
-        name: "MICRO_BASIC_SERVICE",
+        name: 'MICRO_BASIC_SERVICE',
         transport: Transport.TCP,
         options: {
           host: 'localhost',
           port: 9001,
-        }
+        },
       },
       {
-        name: "REDIS_SERVICE",
+        name: 'REDIS_SERVICE',
         transport: Transport.REDIS,
         options: {
           host: 'localhost',
           port: 6379,
-        }
+        },
       },
       {
-        name: "MQTT_SERVICE",
+        name: 'MQTT_SERVICE',
         transport: Transport.MQTT,
         options: {
           url: 'mqtt://localhost:1884',
-        }
+        },
       },
       {
-        name: "NATS_SERVICE",
+        name: 'NATS_SERVICE',
         transport: Transport.NATS,
         options: {
           servers: ['nats://localhost:4222'],
-        }
+        },
       },
       {
         name: 'RMQ_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://localhost:5672'],
-          queue: 'cats_queue',
+          urls: ['amqp://admin:admin@me@localhost:5672'],
+          queue: 'chat.general',
           queueOptions: {
-            durable: false
+            durable: false,
           },
         },
       },
@@ -68,10 +68,10 @@ import { MicroService } from './service';
       //     protoPath: join(__dirname, 'hero/hero.proto'),
       //   }
       // }
-    ])
+    ]),
   ],
   controllers: [MicroServiceController],
   providers: [MicroService],
-  exports: [MicroService]
+  exports: [MicroService],
 })
-export class MicroServiceModule { }
+export class MicroServiceModule {}
