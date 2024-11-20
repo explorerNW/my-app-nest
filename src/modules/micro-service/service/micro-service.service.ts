@@ -1,10 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientRedis } from '@nestjs/microservices';
+import { ClientRedis, ClientRMQ } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class MicroService {
-  constructor(@Inject('REDIS_SERVICE') private redis: ClientRedis) {}
+  constructor(
+    @Inject('REDIS_SERVICE') private readonly redis: ClientRedis,
+    @Inject('RMQ_SERVICE') readonly rmq: ClientRMQ,
+  ) {}
 
   getKeys(pattern: string) {
     return this.redis.send('redis-keys-pattern', pattern);

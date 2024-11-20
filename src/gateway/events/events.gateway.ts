@@ -7,6 +7,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { MicroService } from '../../modules';
 
 @WebSocketGateway({
   cors: {
@@ -18,6 +19,8 @@ export class EventsGateway {
   server: Server;
 
   interval = null;
+
+  constructor(private microService: MicroService) {}
 
   @SubscribeMessage('events')
   @UseFilters(new BaseWsExceptionFilter())
@@ -36,5 +39,10 @@ export class EventsGateway {
     clearInterval(this.interval);
     this.interval = null;
     return { data: 'ok' };
+  }
+
+  @SubscribeMessage('channel-message')
+  channelMeaage(@MessageBody() payload: { channel: string; message: string }) {
+    this.server.emit(payload.channel, { data: payload.message });
   }
 }
