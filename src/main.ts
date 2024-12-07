@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import { LoggingInterceptor } from './interceptors';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
@@ -16,12 +16,18 @@ import compression from '@fastify/compress';
 import fastifyMultipart from '@fastify/multipart';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { constants } from 'zlib';
+import fs from 'fs';
 dotenv.config();
+
+const httpsOptions = {
+  key: fs.readFileSync('secrets/explorernw.top.key'),
+  cert: fs.readFileSync('secrets/explorernw.top_bundle.crt'),
+};
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({ https: httpsOptions }),
   );
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
