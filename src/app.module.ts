@@ -12,21 +12,16 @@ import {
 import { AuthModule } from './auth';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { GatewayModule } from './gateway';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import type { RedisOptions } from 'ioredis';
-import * as redisStore from 'cache-manager-redis-store';
 import { TaskService } from './task.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { IotModule } from './modules/iot';
 import { SseModule } from './modules/sse';
+import { GraphqlModule } from './modules/graphql/graphql.module';
+import { CacheModule } from './cache.module';
 
 @Module({
   imports: [
     ConfigModule.register({ folder: './config' }),
-    CacheModule.register<RedisOptions>({
-      store: redisStore as any,
-    }),
     ScheduleModule.forRoot(),
     postgresDBInit([UserEntity]),
     mongo.init(),
@@ -50,20 +45,15 @@ import { SseModule } from './modules/sse';
         limit: 100,
       },
     ]),
+    CacheModule,
     GatewayModule,
     FileUploadModule,
     MicroServiceModule,
     IotModule,
     SseModule,
+    GraphqlModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-    TaskService,
-  ],
+  providers: [AppService, TaskService],
 })
 export class AppModule {}

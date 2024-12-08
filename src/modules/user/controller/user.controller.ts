@@ -16,6 +16,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthGuard, Role, Roles, RolesGuard } from '../../../auth/guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { catchError, map, of } from 'rxjs';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 type UpdateResult = {
   generatedMaps: [];
@@ -24,7 +25,7 @@ type UpdateResult = {
 };
 
 @Controller('user')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, ThrottlerGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

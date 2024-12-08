@@ -8,5 +8,13 @@
     "deleteOutDir": true,
     "assets": ["**/*.proto"],
     "watchAssets": true
-  }
+  },
+  "plugins": [
+    {
+      "name": "@nestjs/graphql",
+      "options": {
+        "introspectComments": true
+      }
+    }
+  ]
 }

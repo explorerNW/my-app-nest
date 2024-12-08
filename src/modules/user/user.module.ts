@@ -6,11 +6,10 @@ import { UserController } from './controller';
 import { AuthModule } from '../../auth';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Cat, CatSchema } from '../../db';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { QueuesModule } from '../queues';
 import { LoggerModule } from '../logger';
 import { MicroServiceModule } from '../micro-service';
+import { CacheModule } from '../../cache.module';
 
 @Module({
   imports: [
@@ -20,14 +19,9 @@ import { MicroServiceModule } from '../micro-service';
     QueuesModule,
     LoggerModule,
     MicroServiceModule,
+    CacheModule,
   ],
-  providers: [
-    UserService,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
+  providers: [UserService],
   controllers: [UserController],
   exports: [UserService],
 })
