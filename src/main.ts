@@ -16,6 +16,7 @@ import compression from '@fastify/compress';
 import fastifyMultipart from '@fastify/multipart';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { constants } from 'zlib';
+import httpServer from 'http';
 import fs from 'fs';
 dotenv.config();
 
@@ -55,6 +56,9 @@ async function bootstrap() {
   await app.register(fastifyMultipart);
   await app.listen(process.env.SERVER_PORT, '0.0.0.0', () => {
     console.log(`server start on: ${process.env.SERVER_PORT}`);
+  });
+  httpServer.createServer(app.getHttpServer()).listen(9001, () => {
+    console.log(`local server start on: 9001`);
   });
 }
 bootstrap();
