@@ -8,6 +8,7 @@ import {
   CatModule,
   FileUploadModule,
   MicroServiceModule,
+  AiModule,
 } from './modules';
 import { AuthModule } from './auth';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -52,6 +53,7 @@ import { CacheModule } from './cache.module';
     IotModule,
     SseModule,
     GraphqlModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService, TaskService],
